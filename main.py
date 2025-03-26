@@ -2,6 +2,7 @@ import atexit
 import os
 from openai import OpenAI
 import sys
+import argparse
 from dotenv import load_dotenv
 from colorama import init, Fore, Back, Style
 import difflib
@@ -32,18 +33,23 @@ from prompt_toolkit.application.current import get_app
 
 is_diff_on = True
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='AI Developer Console')
+    parser.add_argument('--base-url', 
+                      default="https://api.cborg.lbl.gov",
+                      help='Base URL for the API (default: https://api.cborg.lbl.gov)')
+    return parser.parse_args()
+
 init(autoreset=True)
 load_dotenv()
-# Local clients/VPN users can also use https://api-local.cborg.lbl.gov
-base_url = "https://api.cborg.lbl.gov"
+args = parse_arguments()
 client = OpenAI(
-    base_url=base_url,
-    api_key=os.getenv("CBORG_API_KEY"),
-)
-
+    base_url=args.base_url,
+    api_key="ollama",
+    )
 # Some model options available at LBL
-DEFAULT_MODEL = "lbl/cborg-coder:latest"
-EDITOR_MODEL = "lbl/cborg-coder:latest"
+DEFAULT_MODEL = "qwen2.5-coder:3b"
+EDITOR_MODEL = "qwen2.5-coder:3b"
 #DEFAULT_MODEL = "lbl/deepseek-r1:llama-70b
 #DEFAULT_MODEL= "openai/gpt-4o" 
 #DEFAULT_MODEL = "openai/gpt-4o-mini" 
